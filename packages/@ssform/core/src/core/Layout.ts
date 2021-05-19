@@ -10,7 +10,7 @@ const EVENT_NAME = {
 };
 
 export default class Layout implements ILifecycle {
-    private readonly RANDOM_UUID: string = randomID()
+    private readonly __RANDOM_UUID__: string = randomID()
     readonly ctx: IContext // 上下文
     readonly eventHandler = new EventHandler()
 
@@ -23,7 +23,6 @@ export default class Layout implements ILifecycle {
     level: number // 层级
     parent: Layout | null // 父级
 
-    private _isRerenderFlag: boolean = false // 重新渲染标识
     private _data: any // 当前层级 form 数据
     private _initialized: boolean = false
     private _visiblable: boolean = false // 是否显示
@@ -53,15 +52,15 @@ export default class Layout implements ILifecycle {
             const level = this.level;
             const index = this.index;
             if (this.isGroupItem) {
-                return `${parent.uuid}-${level}_${index}_DynamicItem_${this.RANDOM_UUID}`;
+                return `${parent.uuid}-${level}_${index}_DynamicItem_${this.__RANDOM_UUID__}`;
             }
             const key = this.schema.key;
             if (key) {
                 return `${parent.uuid}-${level}_${index}_${key}`;
             }
-            return `${parent.uuid}-${level}_${index}_${this.RANDOM_UUID}`;
+            return `${parent.uuid}-${level}_${index}_${this.__RANDOM_UUID__}`;
         }
-        return `Root_${this.RANDOM_UUID}`;
+        return `Root_${this.__RANDOM_UUID__}`;
     }
 
     get layoutArray() {
@@ -120,9 +119,11 @@ export default class Layout implements ILifecycle {
                 const key = this.schema.key;
                 this.parent.data[key] = value;
             }
-        } else {
+            this.parent._clearvalueCache();
+        } else { // not has parent
             this.ctx.data = value;
         }
+        this._clearvalueCache();
         this._data = value;
 
         // validate
@@ -174,6 +175,10 @@ export default class Layout implements ILifecycle {
         }
         this._valueCache = this.valueFunc();
         return this._valueCache;
+    }
+
+    private _clearvalueCache() {
+        this._valueCache = undefined;
     }
 
     private initLayouts() {
@@ -445,7 +450,7 @@ export default class Layout implements ILifecycle {
 
     // 需要实现 hook.render()
     render(createElement: Function) {
-        this._valueCache = undefined;
+        this._clearvalueCache();
         this._visiblable = this.visiblableFunc();
         // 判断是否 visible
         if (!this.visiblable) {

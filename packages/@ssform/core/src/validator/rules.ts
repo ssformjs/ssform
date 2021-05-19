@@ -10,7 +10,7 @@ const rules = {
                     reject(new Error(message));
                     return;
                 }
-                resolve();
+                resolve(value);
             });
         };
     },
@@ -23,7 +23,7 @@ const rules = {
                     reject(new Error(message));
                     return;
                 }
-                resolve();
+                resolve(value);
             });
         };
     },
@@ -36,7 +36,7 @@ const rules = {
                     reject(new Error(message));
                     return;
                 }
-                resolve();
+                resolve(value);
             });
         };
     },
@@ -49,7 +49,7 @@ const rules = {
                     reject(new Error(message));
                     return;
                 }
-                resolve();
+                resolve(value);
             });
         };
     },
@@ -62,7 +62,7 @@ const rules = {
                     reject(new Error(message));
                     return;
                 }
-                resolve();
+                resolve(value);
             });
         };
     },
@@ -85,7 +85,7 @@ const rules = {
                     reject(new Error(message));
                     return;
                 }
-                resolve();
+                resolve(value);
             });
         };
     },
@@ -99,7 +99,7 @@ const rules = {
                     reject(new Error(message));
                     return;
                 }
-                resolve();
+                resolve(value);
             });
         };
     },
@@ -113,7 +113,7 @@ const rules = {
                     reject(new Error(message));
                     return;
                 }
-                resolve();
+                resolve(value);
             });
         };
     },
@@ -131,7 +131,7 @@ const rules = {
                     reject(new Error(message));
                     return;
                 }
-                resolve();
+                resolve(value);
             });
         };
     },
@@ -145,7 +145,7 @@ const rules = {
                     reject(new Error(message));
                     return;
                 }
-                resolve();
+                resolve(value);
             });
         };
     },
@@ -159,7 +159,7 @@ const rules = {
                     reject(new Error(message));
                     return;
                 }
-                resolve();
+                resolve(value);
             });
         };
     },

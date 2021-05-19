@@ -70,7 +70,7 @@ function createRegExp(pattern: string, flags = '', message = '请输入有效的
                         reject(new Error(message));
                         return;
                     }
-                    resolve();
+                    resolve(value);
                 });
             };
         },
