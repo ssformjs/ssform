@@ -361,8 +361,8 @@ export default class Layout implements ILifecycle {
     // @private method
     created() {
         // 以下顺序不可变
-        this._data = this.data; // initData
         this.initLayouts(); // 初始化子组件
+        this._data = this.data; // initData
         this._initialized = true;
         this.ctx.created(this); // 注册 layout
     }
@@ -379,7 +379,9 @@ export default class Layout implements ILifecycle {
                 const key = this.schema.key;
                 delete this.parent.data[key];
             }
+            this.parent._clearvalueCache();
         }
+        this._clearvalueCache();
 
         const validationResult = {
             isValid: true,
