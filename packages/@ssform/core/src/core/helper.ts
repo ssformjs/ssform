@@ -5,6 +5,7 @@ import isNull from 'lodash/isNull';
 import isUndefined from 'lodash/isUndefined';
 import get from 'lodash/get';
 import cloneDeep from 'lodash/cloneDeep';
+import pickBy from 'lodash/pickBy';
 import set from 'lodash/set';
 import isNumber from 'lodash/isNumber';
 import merge from 'lodash/merge';
@@ -84,4 +85,5 @@ export default {
     isArguments,
     isArrayLike,
     isMap, isSet,
+    pickBy,
 };

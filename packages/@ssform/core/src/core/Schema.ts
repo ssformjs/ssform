@@ -17,6 +17,7 @@ export default class Schema {
     placeholder?: string
     default?: any
 
+    // 操作性字符
     invisible?: object | boolean | undefined
     visible?: object | boolean | undefined
     disabled?: object | boolean | undefined
@@ -51,6 +52,17 @@ export default class Schema {
 
     get schema() {
         return this[ORIGNAL_SCHEMA_KEY] || {};
+    }
+
+    get subItemSchema() {
+        const schema = helper.cloneDeep(this.schema);
+        [
+            'invisible', 'visible', 'disabled',
+            'rules', 'role',
+        ].forEach(key => {
+            delete schema[key];
+        });
+        return schema;
     }
 
     get layouts(): Array<any> | null {

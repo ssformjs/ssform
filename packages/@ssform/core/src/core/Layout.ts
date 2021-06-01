@@ -417,7 +417,7 @@ export default class Layout implements ILifecycle {
             });
         }
         const nextLevel = this.level + 1;
-        const schema = Object.assign({}, this.schema.schema);
+        const schema = Object.assign({}, this.schema.subItemSchema);
         const layout = this.createSubLayout(schema, nextIndex, nextLevel);
         if (layout) {
             this.layouts.add(layout);
