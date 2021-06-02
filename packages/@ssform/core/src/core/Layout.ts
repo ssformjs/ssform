@@ -427,6 +427,11 @@ export default class Layout implements ILifecycle {
         return layout;
     }
 
+    // remove self
+    remove() {
+        return this.parent?.removeChildLayout(this.index);
+    }
+
     removeChildLayout(index: number) {
         if (!this.isDynamicLayoutType) {
             console.warn('[Warn]', 'Not Support removeChildLayout...');

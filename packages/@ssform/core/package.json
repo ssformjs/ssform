@@ -1,7 +1,10 @@
 {
     "name": "@ssform/core",
-    "version": "0.0.0",
+    "version": "0.0.0-alpha.1",
     "description": "ssform core",
+    "keywords": [
+      "ssform"
+    ],
     "author": "Zyao89 <zyao89@gmail.com>",
     "homepage": "",
     "license": "ISC",
@@ -13,6 +16,13 @@
     "files": [
         "lib"
     ],
+    "repository": {
+      "type": "git",
+      "url": "git+https://github.com/ssformjs/ssform.git"
+    },
+    "bugs": {
+      "url": "https://github.com/ssformjs/ssform/issues"
+    },
     "publishConfig": {
         "access": "public"
     },
