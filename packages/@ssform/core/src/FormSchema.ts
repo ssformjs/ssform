@@ -4,22 +4,19 @@ import Layout from './core/Layout';
 import format from './core/format';
 import helper from './core/helper';
 
-export default class FormSchema {
+class Builder {
 
-    ctx: IContext
-    layout: Layout // root layout
+    handler: FormSchema
 
-    constructor(schema: ISchema | object, data?: object | null, hook?: IHook) {
-        // 校验 schema
+    private layout: Layout // root layout
 
-        this.ctx = new Context(<ISchema>schema, data, hook);
-        this.layout = new Layout(this.ctx, {
-            parent: null,
-            schema,
-            level: 0,
-        });
-        this.layout.created();
+    constructor(handler: FormSchema, layout: Layout) {
+        this.handler = handler;
+        this.layout = layout;
+    }
 
+    get ctx() {
+        return this.handler.ctx;
     }
 
     get value() {
@@ -47,8 +44,42 @@ export default class FormSchema {
         return this.layout.forceUpdate();
     }
 
+    destroy() {
+        return this.layout.destroy();
+    }
+}
+
+export default class FormSchema {
+
+    ctx: IContext
+    schema: ISchema | object // root layout
+    builder: Builder | undefined;
+
+    constructor(schema: ISchema | object, data?: object | null, hook?: IHook) {
+        // 校验 schema
+        this.ctx = new Context(<ISchema>schema, data, hook);
+        this.schema = schema;
+    }
+
     // ZAP: 需要改进事件机制
     setHook(hook: IHook) {
         this.ctx.setHook(hook);
+        return this;
+    }
+
+    create() {
+        const layout = new Layout(this.ctx, {
+            parent: null,
+            schema: this.schema,
+            level: 0,
+        }).created();
+        this.builder = new Builder(this, layout);
+        return this.builder;
+    }
+
+    destroy() {
+        if (this.builder) {
+            this.builder.destroy();
+        }
     }
 }

@@ -1,4 +1,5 @@
 import { FormSchema } from '@ssform/core';
+import helper from '@ssform/core/lib/core/helper';
 import Layout from '@ssform/core/lib/core/Layout';
 import { ISchema, IHook } from '@ssform/core/lib/Interface';
 
@@ -17,11 +18,18 @@ export interface ISimpleHook {
     update?: (layout: Layout) => void
 }
 
-
 export default class SimpleSchema extends FormSchema {
 
     constructor(schema: ISchema | object, data?: object | null, hook?: ISimpleHook) {
         super(schema, data, SimpleSchema._createHook(hook));
+    }
+
+    setSimpleHook(simpleHook: ISimpleHook) {
+        const hook = SimpleSchema._createHook(simpleHook);
+        if (hook) {
+            super.setHook(hook);
+        }
+        return this;
     }
 
     private static _createHook(hook?: ISimpleHook): IHook | undefined {
@@ -37,7 +45,7 @@ export default class SimpleSchema extends FormSchema {
                             const layout = [ ...l.layouts ][index];
                             return hook?.renderDynamicGroupLayout(_h, layout, [ itemC ]);
                         });
-                        if (typeof hook.renderDynamicGroup === 'function') { // if exist
+                        if (helper.isFunction(hook.renderDynamicGroup)) { // if exist
                             return hook?.renderDynamicGroup(_h, l, item);
                         } // else hook.renderGroup
                     }
@@ -47,12 +55,5 @@ export default class SimpleSchema extends FormSchema {
             },
             update: hook?.update,
         };
-    }
-
-    setSimpleHook(simpleHook: ISimpleHook) {
-        const hook = SimpleSchema._createHook(simpleHook);
-        if (hook) {
-            super.setHook(hook);
-        }
     }
 }

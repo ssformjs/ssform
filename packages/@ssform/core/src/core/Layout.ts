@@ -365,6 +365,7 @@ export default class Layout implements ILifecycle {
         this._data = this.data; // initData
         this._initialized = true;
         this.ctx.created(this); // 注册 layout
+        return this;
     }
 
     // @private method
