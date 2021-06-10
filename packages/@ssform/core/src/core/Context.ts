@@ -1,16 +1,18 @@
-import helper from './helper';
-import { ISchema, IContext, IHook, ILifecycle, IEventHandler } from '../Interface';
+import helper from '../helper';
+import { ISchema, IContext, IHook, ILifecycle, IRule } from '../Interface';
 import Layout from './Layout';
-import parser from './parser';
-import EventHandler from './EventHandler';
+import { Parser, Format } from '../parser';
+import BaseEventHandler from './BaseEventHandler';
+import validator from '../validator';
 
 // 上下文
-export default class Context implements IContext, ILifecycle, IEventHandler {
+export default class Context extends BaseEventHandler implements IContext, ILifecycle {
 
     readonly layouts: Set<Layout> = new Set<Layout>()
-    readonly eventHandler = new EventHandler()
     readonly schema: ISchema
     readonly originalData: object // 源数据副本
+    readonly parserHandler: Parser
+    readonly formatHandler: Format
 
     data: object // form 操作数据
     hook: IHook | null;
@@ -20,10 +22,15 @@ export default class Context implements IContext, ILifecycle, IEventHandler {
     // extends rules 扩展校验规则
 
     constructor(schema: ISchema, data?: object | null, hook?: IHook) {
+        super();
         this.schema = schema;
         data = data || {};
         this.originalData = helper.cloneDeep(data);
-        this.data = parser(helper.cloneDeep(data), this.formatter);
+
+        this.parserHandler = new Parser({ formatter: this.formatter });
+        this.formatHandler = new Format({ formatter: this.formatter });
+
+        this.data = this.parserHandler.parser(data);
         // hook
         this.hook = hook || null;
     }
@@ -44,6 +51,28 @@ export default class Context implements IContext, ILifecycle, IEventHandler {
         return this.schema.inject || {};
     }
 
+    validationRuleHook(rule) {
+        // 需要通过某一种规则解析 rules 中的每一个值
+        if (this.hook && helper.isFunction(this.hook.validationRule)) {
+            return this.hook.validationRule(rule);
+        }
+        return (rule: string | IRule) => {
+            // rule 可能是一个对象
+            if (helper.isString(rule)) { // 默认处理方式
+                const key = rule.replace(/\([\w|\d|\\.]+\)/g, ''); // 可增强
+                const params = rule.replace(key, '').replace('(', '').replace(')', '');
+                const variables = params.split(',').map(param => param.trim());
+                return validator.createValidationRule(key, ...variables);
+            }
+            return validator.createValidationRule(rule);
+        };
+    }
+
+    getFormatValue() {
+        return this.formatHandler.format(this.value);
+    }
+
+    // 设置监听
     setHook(hook: IHook) {
         this.hook = hook;
     }
@@ -80,22 +109,4 @@ export default class Context implements IContext, ILifecycle, IEventHandler {
             }
         });
     }
-
-    // events
-    on(eventName: string, handler: Function) {
-        return this.eventHandler.on(eventName, handler);
-    }
-
-    once(eventName: string, handler: Function) {
-        return this.eventHandler.once(eventName, handler);
-    }
-
-    off(eventName: string, handler: Function) {
-        return this.eventHandler.off(eventName, handler);
-    }
-
-    dispatch(eventName: string, ...values: any) {
-        return this.eventHandler.dispatch(eventName, ...values);
-    }
-
 }

@@ -1,8 +1,7 @@
 import { ISchema, IContext, IHook } from './Interface';
 import Context from './core/Context';
 import Layout from './core/Layout';
-import format from './core/format';
-import helper from './core/helper';
+import helper from './helper';
 
 class Builder {
 
@@ -26,7 +25,7 @@ class Builder {
     }
 
     get formatValue() {
-        return format(this.value, this.ctx.formatter);
+        return this.ctx.getFormatValue(this.value);
     }
 
     validate(): Promise<any> {

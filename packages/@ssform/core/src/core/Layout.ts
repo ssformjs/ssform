@@ -1,18 +1,17 @@
 import { ICurrentData, IContext, ILifecycle } from '../Interface';
 import Schema from './Schema';
 import Validator from './Validator';
-import helper, { randomID, arrayToMapForData, mapToArrayForData } from './helper';
+import helper, { randomID, arrayToMapForData, mapToArrayForData } from '../helper';
 import { MAP_KEY, ARRAY_KEY } from './constants';
-import EventHandler from './EventHandler';
+import BaseEventHandler from './BaseEventHandler';
 
 const EVENT_NAME = {
     VALIDATE: 'validate',
 };
 
-export default class Layout implements ILifecycle {
+export default class Layout extends BaseEventHandler implements ILifecycle {
     private readonly __RANDOM_UUID__: string = randomID()
     readonly ctx: IContext // 上下文
-    readonly eventHandler = new EventHandler()
 
     readonly schema: Schema // 规则
     readonly validator: Validator // 验证器
@@ -29,6 +28,7 @@ export default class Layout implements ILifecycle {
     private _valueCache: any = undefined
 
     constructor(ctx: IContext, current: ICurrentData) {
+        super();
         this.ctx = ctx;
 
         const { parent, index, level, schema } = current;
@@ -470,27 +470,5 @@ export default class Layout implements ILifecycle {
 
     forceUpdate() { // 需要实现 hook.update()
         return this.ctx._$forceUpdate(this);
-    }
-
-    // TODO: 是否需要单独的事件？
-    // events
-    on(eventName: string, handler: Function) {
-        const eventHandler = this.eventHandler;
-        return eventHandler.on(eventName, handler);
-    }
-
-    once(eventName: string, handler: Function) {
-        const eventHandler = this.eventHandler;
-        return eventHandler.once(eventName, handler);
-    }
-
-    off(eventName: string, handler: Function) {
-        const eventHandler = this.eventHandler;
-        return eventHandler.off(eventName, handler);
-    }
-
-    dispatch(eventName: string, ...values: any) {
-        const eventHandler = this.eventHandler;
-        return eventHandler.dispatch(eventName, ...values);
     }
 }

@@ -1,5 +1,5 @@
 import { IContext, IRule } from '../Interface';
-import helper from './helper';
+import helper from '../helper';
 import { ORIGNAL_SCHEMA_KEY, IMMUTABLE_SCHEMA_KEYS, DEFAULT_SCHEMA_GROUP_TYPE, DYNAMIC_LAYOUT_TYPES, MAP_KEY } from './constants';
 
 

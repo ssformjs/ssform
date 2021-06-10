@@ -5,7 +5,6 @@ export interface IEventHandler {
     on: (eventName: string, handler: Function) => IEventHandler
     off: (eventName: string, handler: Function) => IEventHandler
     once: (eventName: string, handler: Function) => IEventHandler
-
 }
 
 export interface IContext extends IEventHandler {
@@ -49,14 +48,10 @@ export interface IValidationRuleFunc {
     (value: any): Promise<any>,
 }
 
-export interface IValidationRuleOptions {
-    variables: string[]
-    message? : string
-}
-
 export interface IValidationRule {
     key: string
     validate: (...variables: any) => IValidationRuleFunc
+    variables?: any[]
     message? : string
 }
 
@@ -73,6 +68,10 @@ export interface ILifecycle {
 }
 
 export interface IHook {
+    // 渲染dom函数
     render: (createElement: Function, layout: Layout, childrens: any[]) => any
+    // 调用刷新UI操作
     update?: (layout: Layout) => void
+    // 自定义校验规则解析
+    validationRule?: (rule: string | object) => IValidationRule
 }

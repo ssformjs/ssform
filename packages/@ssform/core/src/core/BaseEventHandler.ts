@@ -1,6 +1,6 @@
 import { IEventHandler } from '../Interface';
 
-export default class EventHandler implements IEventHandler {
+export class EventHandler implements IEventHandler {
 
     private readonly eventBus: Map<string, Set<Function>> = new Map<string, Set<Function>>();
 
@@ -52,6 +52,31 @@ export default class EventHandler implements IEventHandler {
             return result;
         };
         return this.on(eventName, wrapperHandler);
+    }
+
+}
+
+// 上下文
+export default abstract class BaseEventHandler implements IEventHandler {
+
+    readonly eventHandler = new EventHandler()
+
+    // TODO: 是否需要单独的事件？
+    // events
+    on(eventName: string, handler: Function) {
+        return this.eventHandler.on(eventName, handler);
+    }
+
+    once(eventName: string, handler: Function) {
+        return this.eventHandler.once(eventName, handler);
+    }
+
+    off(eventName: string, handler: Function) {
+        return this.eventHandler.off(eventName, handler);
+    }
+
+    dispatch(eventName: string, ...values: any) {
+        return this.eventHandler.dispatch(eventName, ...values);
     }
 
 }

@@ -1,5 +1,5 @@
-import { IValidationRule, IValidationRuleFunc, IValidationRuleOptions, IRule } from '../Interface';
-import helper, { isRealEmpty } from '../core/helper';
+import { IValidationRule, IValidationRuleFunc, IRule } from '../Interface';
+import helper, { isRealEmpty } from '../helper';
 import ruleConfigs from './rules';
 
 const NOOP_KEY = '________NOOP_KEY________';
@@ -10,17 +10,21 @@ export class ValidationRule {
     readonly validate: IValidationRuleFunc
     message: string | undefined;
 
-    constructor(rule: IValidationRule, options: IValidationRuleOptions) {
+    constructor(rule: IValidationRule) {
         this.rule = rule;
-        const variables = options.variables;
-        this.validate = rule.validate(...variables);
-
         // 错误提示信息
-        this.message = options.message;
+        this.message = rule.message;
+        this.validate = helper.isFunction(rule.validate)
+            ? rule.validate(...this.variables)
+            : () => Promise.resolve(true);
     }
 
     get isNoop(): boolean {
         return this.key === NOOP_KEY;
+    }
+
+    get variables(): any[] {
+        return this.rule.variables || [];
     }
 
     get key(): string {
@@ -34,11 +38,8 @@ export class ValidationRule {
     }
 
     // 创建一个校验实例
-    public static create(rule: IValidationRule, variables: string[], message?: string) {
-        return new ValidationRule(rule, {
-            variables,
-            message,
-        });
+    public static create(rule: IValidationRule) {
+        return new ValidationRule(rule);
     }
 }
 
@@ -77,7 +78,7 @@ function createRegExp(pattern: string, flags = '', message = '请输入有效的
     };
 }
 
-const noopValidationRule = ValidationRule.create({ key: NOOP_KEY, validate: () => () => Promise.resolve(true) }, []);
+const noopValidationRule = { key: NOOP_KEY, validate: () => () => Promise.resolve(true) };
 
 export default {
     get(key: string) {
@@ -89,7 +90,7 @@ export default {
     get size() {
         return RULES.size;
     },
-    create(key: string | IRule, ...variables: any) {
+    createValidationRule(key: string | IRule, ...variables: any) {
         let rule: IValidationRule | undefined;
         let message: string | undefined; // TODO message 还没有解决
         if (helper.isString(key)) {
@@ -112,6 +113,10 @@ export default {
             // 没有匹配到规则
             return noopValidationRule;
         }
-        return ValidationRule.create(rule, variables, message);
+        Object.assign(rule, {
+            variables,
+            message,
+        });
+        return rule;
     },
 };
