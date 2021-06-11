@@ -41,9 +41,6 @@ export default class Context extends BaseEventHandler implements IContext, ILife
     }
 
     get formatter() {
-        if (!helper.isPlainObject(this.schema.formatter)) {
-            return;
-        }
         return this.schema.formatter;
     }
 

@@ -63,6 +63,21 @@ function _parseFunction(val, form) {
     return result;
 }
 
+function _formatValueString(formatter, form) {
+    console.info('针对性处理 string');
+    if (formatter.startsWith(FormatterOption.FUNCTION)) { // Function
+        return _parseFunction(formatter, form);
+    } else if (formatter.startsWith(FormatterOption.MAP)) { // 把数组转换成 map
+        return _parseStringAt(formatter, form); // 去除 @&
+    } else if (formatter.includes(FormatterOption.ADD)) {
+        return _parseStringPlus(formatter, form);
+    } else if (formatter.startsWith(FormatterOption.GET)) { // 只要 & 开头的为取值
+        const val = _parseStringUnpack(formatter, form); // 解包
+        return val !== undefined && helper.get(form, val.substring(1));
+    }
+    return formatter;
+}
+
 
 export default class Format extends BaseParser {
     param: FormatParam;
@@ -102,20 +117,22 @@ function _format(form: object, formatter: object | string) {
             }
 
             if (helper.isString(value)) {
-                if (value.startsWith(FormatterOption.FUNCTION)) { // Function
-                    const val = _parseFunction(value, form);
-                    val !== undefined && (result[dataKey] = val);
-                } else if (value.startsWith(FormatterOption.MAP)) { // 把数组转换成 map
-                    result[dataKey] = _parseStringAt(value, form); // 去除 @&
-                } else if (value.includes(FormatterOption.ADD)) {
-                    const val = _parseStringPlus(value, form);
-                    val !== undefined && (result[dataKey] = val);
-                } else if (value.startsWith(FormatterOption.GET)) { // 只要 & 开头的为取值
-                    const val = _parseStringUnpack(value, form); // 解包
-                    val !== undefined && (result[dataKey] = helper.get(form, val.substring(1)));
-                } else {
-                    result[dataKey] = value;
-                }
+                const val = _formatValueString(value, form);
+                val !== undefined && (result[dataKey] = val);
+                // if (value.startsWith(FormatterOption.FUNCTION)) { // Function
+                //     const val = _parseFunction(value, form);
+                //     val !== undefined && (result[dataKey] = val);
+                // } else if (value.startsWith(FormatterOption.MAP)) { // 把数组转换成 map
+                //     result[dataKey] = _parseStringAt(value, form); // 去除 @&
+                // } else if (value.includes(FormatterOption.ADD)) {
+                //     const val = _parseStringPlus(value, form);
+                //     val !== undefined && (result[dataKey] = val);
+                // } else if (value.startsWith(FormatterOption.GET)) { // 只要 & 开头的为取值
+                //     const val = _parseStringUnpack(value, form); // 解包
+                //     val !== undefined && (result[dataKey] = helper.get(form, val.substring(1)));
+                // } else {
+                //     result[dataKey] = value;
+                // }
             } else if (helper.isPlainObject(value) || Array.isArray(value)) {
                 result[dataKey] = _format(form, value);
             }
@@ -137,17 +154,7 @@ function _format(form: object, formatter: object | string) {
     } else if (Array.isArray(formatter)) {
         return formatter.map(val => _format(form, val));
     } else if (helper.isString(formatter)) { // 针对性处理
-        if (formatter.startsWith(FormatterOption.FUNCTION)) { // Function
-            return _parseFunction(formatter, form);
-        } else if (formatter.startsWith(FormatterOption.MAP)) { // 把数组转换成 map
-            return _parseStringAt(formatter, form); // 去除 @&
-        } else if (formatter.includes(FormatterOption.ADD)) {
-            return _parseStringPlus(formatter, form);
-        } else if (formatter.startsWith(FormatterOption.GET)) { // 只要 & 开头的为取值
-            const val = _parseStringUnpack(formatter, form); // 解包
-            return val !== undefined && helper.get(form, val.substring(1));
-        }
-        return formatter;
+        return _formatValueString(formatter, form);
     }
     return result;
 }

@@ -21,7 +21,7 @@ export default class Parser extends BaseParser {
 }
 
 // data 属于当前阶段的数据
-function _parser(form: object, formatter: object, data = form) {
+function _parser(form: object, formatter: object | string, data = form) {
     if (helper.isPlainObject(formatter)) {
         const keys = Object.keys(formatter);
         keys.forEach(key => {

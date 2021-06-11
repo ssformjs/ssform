@@ -1,7 +1,6 @@
-import { FormSchema } from '@ssform/core';
-import helper from '@ssform/core/lib/core/helper';
 import Layout from '@ssform/core/lib/core/Layout';
 import { ISchema, IHook } from '@ssform/core/lib/Interface';
+import { FormSchema, helper } from '@ssform/core';
 
 export interface ISimpleHook {
     // 根结点
@@ -18,7 +17,7 @@ export interface ISimpleHook {
     update?: (layout: Layout) => void
 }
 
-export default class SimpleSchema extends FormSchema {
+export class SimpleSchema extends FormSchema {
 
     constructor(schema: ISchema | object, data?: object | null, hook?: ISimpleHook) {
         super(schema, data, SimpleSchema._createHook(hook));

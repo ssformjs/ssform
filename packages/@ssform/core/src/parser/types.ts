@@ -8,11 +8,11 @@ export const FormatterOption = {
 };
 
 export interface BaseParam {
-    formatter: object | undefined,
+    formatter: object | string | undefined,
 }
 export interface ParserParam extends BaseParam {
-    callback?: (form: object, formatter: object) => object
+    callback?: (form: object, formatter: object | string) => object
 }
 export interface FormatParam extends BaseParam {
-    callback?: (form: object, formatter: object) => object
+    callback?: (form: object, formatter: object | string) => object
 }
