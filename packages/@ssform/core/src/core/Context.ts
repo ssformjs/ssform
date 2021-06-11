@@ -68,8 +68,8 @@ export default class Context extends BaseEventHandler implements IContext, ILife
         };
     }
 
-    getFormatValue() {
-        return this.formatHandler.format(this.value);
+    getFormatValue(value) {
+        return this.formatHandler.format(value);
     }
 
     // 设置监听
