@@ -1,6 +1,6 @@
 {
   "name": "@ssform/simple",
-  "version": "0.0.0",
+  "version": "0.0.0-alpha.1",
   "description": "ssform simple",
   "keywords": [
     "ssform"
@@ -24,28 +24,29 @@
     "url": "https://github.com/ssformjs/ssform/issues"
   },
   "scripts": {
-      "build": "rollup --c rollup.config.js",
-      "test": "jest --coverage --verbose -u"
+    "build": "rollup --c rollup.config.js",
+    "test": "jest --coverage --verbose -u"
   },
   "devDependencies": {
-      "@babel/core": "^7.11.1",
-      "@babel/preset-env": "^7.11.0",
-      "@types/jest": "^26.0.10",
-      "@types/lodash": "^4.14.160",
-      "@types/validator": "^13.1.0",
-      "eslint-config-2o3t": "^2.0.1",
-      "eslint-plugin-jest": "^23.20.0",
-      "jest": "^26.4.1",
-      "rollup": "^2.26.4",
-      "rollup-plugin-babel": "^4.4.0",
-      "rollup-plugin-commonjs": "^10.1.0",
-      "rollup-plugin-eslint": "^7.0.0",
-      "rollup-plugin-node-resolve": "^5.2.0",
-      "rollup-plugin-typescript2": "^0.27.2",
-      "ts-jest": "^26.2.0",
-      "typescript": "^3.9.7"
+    "@babel/core": "^7.11.1",
+    "@babel/preset-env": "^7.11.0",
+    "@types/jest": "^26.0.10",
+    "@types/lodash": "^4.14.160",
+    "@types/validator": "^13.1.0",
+    "eslint-config-2o3t": "^2.0.1",
+    "eslint-plugin-jest": "^23.20.0",
+    "jest": "^26.4.1",
+    "rollup": "^2.26.4",
+    "rollup-plugin-babel": "^4.4.0",
+    "rollup-plugin-commonjs": "^10.1.0",
+    "rollup-plugin-eslint": "^7.0.0",
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "rollup-plugin-typescript2": "^0.27.2",
+    "ts-jest": "^26.2.0",
+    "typescript": "^3.9.7"
   },
   "dependencies": {
-      "lodash": "^4.17.20"
+    "@ssform/core": "0.0.0-alpha.1",
+    "lodash": "^4.17.20"
   }
 }

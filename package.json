@@ -1,16 +1,17 @@
 {
   "name": "root",
   "private": true,
+  "author": "Zyao89 <zyao89@gmail.com>",
   "workspaces": [
     "packages/@ssform/*",
     "packages/example/*"
   ],
   "scripts": {
     "lerna": "lerna",
+    "build": "yarn build:core && yarn build:simple",
     "build:core": "lerna run build --scope=@ssform/core --stream",
     "build:simple": "lerna run build --scope=@ssform/simple --stream",
-    "build:all": "yarn build:core && yarn build:simple",
-    "serve:el": "lerna run serve --scope=el --stream",
+    "serve:el": "lerna run serve --scope=example-el --stream",
     "bootstrap": "lerna bootstrap"
   },
   "devDependencies": {
