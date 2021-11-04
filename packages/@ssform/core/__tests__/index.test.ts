@@ -51,13 +51,15 @@ describe('validate:', () => {
             },
         });
 
+        const formSchema = form.create();
+
         const h = () => {
 
         };
-        form.render(h);
-        console.log('[Value]\n', JSON.stringify(form.formatValue, null, 2));
+        formSchema.render(h);
+        console.log('[Value]\n', JSON.stringify(formSchema.formatValue, null, 2));
         // console.log('[JSON]\n', JSON.stringify(form, null, 2));
-        expect(form.layout.parent).toStrictEqual(null);
+        expect(formSchema.root.parent).toStrictEqual(null);
         // console.log('[FormatValue]\n', JSON.stringify(form.formatValue, null, 2));
     });
 

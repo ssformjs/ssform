@@ -25,6 +25,8 @@
   },
   "scripts": {
     "build": "rollup --c rollup.config.js",
+    "release": "micro-app release",
+    "release:patch": "npm run release patch",
     "test": "jest --coverage --verbose -u"
   },
   "devDependencies": {

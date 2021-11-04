@@ -14,6 +14,10 @@ class Builder {
         this.layout = layout;
     }
 
+    get root() {
+        return this.layout;
+    }
+
     get ctx() {
         return this.handler.ctx;
     }

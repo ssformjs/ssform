@@ -18,14 +18,15 @@ export default class Context extends BaseEventHandler implements IContext, ILife
     hook: IHook | null;
 
     private _forceUpdateFlag: boolean = false // 防止重复标记
+    private _stateMap = new Map(); // 全局变量
 
     // extends rules 扩展校验规则
 
     constructor(schema: ISchema, data?: object | null, hook?: IHook) {
         super();
         this.schema = schema;
-        data = data || {};
-        this.originalData = helper.cloneDeep(data);
+        data = data || {}; // 数据
+        this.originalData = helper.cloneDeep(data); // 原始数据
 
         this.parserHandler = new Parser({ formatter: this.formatter });
         this.formatHandler = new Format({ formatter: this.formatter });
@@ -46,6 +47,11 @@ export default class Context extends BaseEventHandler implements IContext, ILife
 
     get inject() {
         return this.schema.inject || {};
+    }
+
+    // 设置监听
+    setHook(hook: IHook) {
+        this.hook = hook;
     }
 
     validationRuleHook(rule) {
@@ -69,11 +75,6 @@ export default class Context extends BaseEventHandler implements IContext, ILife
         return this.formatHandler.format(value);
     }
 
-    // 设置监听
-    setHook(hook: IHook) {
-        this.hook = hook;
-    }
-
     created(layout?: Layout) {
         if (layout) {
             this.layouts.add(layout);
@@ -84,6 +85,21 @@ export default class Context extends BaseEventHandler implements IContext, ILife
         if (layout) {
             this.layouts.delete(layout);
         }
+    }
+
+    // 存全局变量
+    setState(k: String, v: any) {
+        return this._stateMap.set(k, v);
+    }
+
+    // 判断是否有全局变量
+    hasState(k: String) {
+        return this._stateMap.has(k);
+    }
+
+    // 取全局变量
+    getState(k: String) {
+        return this._stateMap.get(k);
     }
 
     _$render(createElement: Function, layout: Layout, childrens: any[]) {
