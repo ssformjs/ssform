@@ -94,7 +94,7 @@ export default class Schema {
     get options(): Array<any> {
         const options = this.schema.options;
         if (!Array.isArray(options)) {
-            console.warn('[Schema] options must be array!', options);
+            // console.warn('[Schema] options must be array!', options);
             return [];
         }
         return options.map(item => {

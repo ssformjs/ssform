@@ -102,7 +102,10 @@ export default class Layout extends BaseEventHandler implements ILifecycle {
             }
 
             // validate
-            this.validateDataFunc(result);
+            // this.validateDataFunc(result);
+
+            // 快速赋值，刷新逻辑
+            this.data = result;
 
         } else {
             result = this._data;
@@ -175,6 +178,14 @@ export default class Layout extends BaseEventHandler implements ILifecycle {
         }
         this._valueCache = this.valueFunc();
         return this._valueCache;
+    }
+
+    get key() {
+        return this.schema.key;
+    }
+
+    get keyPath() {
+        return this.getKeyPath();
     }
 
     private _clearvalueCache() {
@@ -341,6 +352,20 @@ export default class Layout extends BaseEventHandler implements ILifecycle {
             };
             this.dispatch(EVENT_NAME.VALIDATE, validationResult);
         });
+    }
+
+    // 整条链路的key组成path
+    getKeyPath(separator: string = '.') {
+        const key = this.key;
+        const p = [ key ];
+        let parent = this.parent;
+        while (parent) {
+            if (parent.key) {
+                p.unshift(parent.key);
+            }
+            parent = parent.parent;
+        }
+        return p.join(separator);
     }
 
     validate(): Promise<any> {

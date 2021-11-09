@@ -32,6 +32,18 @@ class Builder {
         return this.ctx.getFormatValue(this.value);
     }
 
+    findLayoutByKeyPath(keyPath: string) {
+        if (!keyPath) {
+            console.warn('[findLayoutByKeyPath] keyPath must be required!', keyPath);
+            return;
+        }
+        const layouts = [ ...this.ctx.layouts ];
+        const layout = layouts.find(l => {
+            return l.keyPath === keyPath;
+        });
+        return layout;
+    }
+
     validate(): Promise<any> {
         return this.layout.validate();
     }
