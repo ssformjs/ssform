@@ -283,7 +283,7 @@ export default class Layout extends BaseEventHandler implements ILifecycle {
             };
         }
         return {
-            [key]: this.data || '',
+            [key]: this.data,
         };
     }
 
@@ -418,7 +418,7 @@ export default class Layout extends BaseEventHandler implements ILifecycle {
     toJSON() {
         return {
             visiblable: this.visiblable,
-            data: this.data || '',
+            data: this.data,
             isGroup: this.isGroup,
             isGroupItem: this.isGroupItem,
             isDynamicLayoutType: this.isDynamicLayoutType,
