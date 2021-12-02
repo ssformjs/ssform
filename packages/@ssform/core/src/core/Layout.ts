@@ -117,7 +117,12 @@ export default class Layout extends BaseEventHandler implements ILifecycle {
     set data(value: any) {
         if (this.parent) {
             if (this.isGroupItem) {
-                this.parent.data[this.index] = value;
+                if (this.parent.data && typeof this.parent.data.splice === 'function') {
+                    // 不能凭空插入
+                    this.parent.data.splice(this.index, 1, value);
+                } else {
+                    this.parent.data[this.index] = value;
+                }
             } else {
                 const key = this.schema.key;
                 this.parent.data[key] = value;
@@ -181,7 +186,8 @@ export default class Layout extends BaseEventHandler implements ILifecycle {
     }
 
     get key() {
-        return this.schema.key;
+        const key = this.isGroupItem ? this.index : this.schema.key;
+        return key;
     }
 
     get keyPath() {
@@ -358,12 +364,10 @@ export default class Layout extends BaseEventHandler implements ILifecycle {
     getKeyPath(separator: string = '.') {
         const key = this.key;
         const p = [ key ];
-        let parent = this.parent;
-        while (parent) {
-            if (parent.key) {
-                p.unshift(parent.key);
-            }
-            parent = parent.parent;
+        const parent = this.parent;
+        if (parent) {
+            const pkey = parent.getKeyPath(separator);
+            pkey && p.unshift(pkey);
         }
         return p.join(separator);
     }
