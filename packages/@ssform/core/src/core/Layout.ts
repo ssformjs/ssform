@@ -92,12 +92,13 @@ export default class Layout extends BaseEventHandler implements ILifecycle {
 
             // 初始化 data
             if (result === undefined) {
-                if (this.isDynamicLayoutType) {
-                    result = [];
-                } else if (this.isGroup || this.isGroupItem) {
-                    result = {};
-                } else {
-                    result = this.schema.default;
+                result = this.schema.default; // 优先配置 default
+                if (result === undefined) {
+                    if (this.isDynamicLayoutType) {
+                        result = [];
+                    } else if (this.isGroup || this.isGroupItem) {
+                        result = {};
+                    }
                 }
             }
 
@@ -116,17 +117,7 @@ export default class Layout extends BaseEventHandler implements ILifecycle {
 
     set data(value: any) {
         if (this.parent) {
-            if (this.isGroupItem) {
-                if (this.parent.data && typeof this.parent.data.splice === 'function') {
-                    // 不能凭空插入
-                    this.parent.data.splice(this.index, 1, value);
-                } else {
-                    this.parent.data[this.index] = value;
-                }
-            } else {
-                const key = this.schema.key;
-                this.parent.data[key] = value;
-            }
+            this.parent.data[this.key] = value;
             this.parent._clearvalueCache();
         } else { // not has parent
             this.ctx.data = value;
@@ -220,7 +211,7 @@ export default class Layout extends BaseEventHandler implements ILifecycle {
             const array = this.data; // 当前数据
             if (Array.isArray(array)) {
                 return array.map((item, index) => {
-                    const schema = Object.assign({}, this.schema.schema);
+                    const schema = Object.assign({}, this.schema.subItemSchema); // 数组需要去除部分逻辑
                     return this.createSubLayout(schema, index, currLevel);
                 });
             }
@@ -295,6 +286,9 @@ export default class Layout extends BaseEventHandler implements ILifecycle {
 
     private visiblableFunc() {
         const schema = this.schema;
+        // if (this.isGroupItem) { // 如果是数组，则不需要判断是否显示隐藏
+        //     return true;
+        // }
         if (schema.visible === false) {
             return false;
         }

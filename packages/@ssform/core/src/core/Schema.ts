@@ -58,7 +58,8 @@ export default class Schema {
         const schema = helper.cloneDeep(this.schema);
         [
             'invisible', 'visible', 'disabled',
-            'rules', 'role',
+            'default', // 数组项继承时，移除默认值
+            // 'rules', 'role',
         ].forEach(key => {
             delete schema[key];
         });
