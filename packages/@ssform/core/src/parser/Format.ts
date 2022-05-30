@@ -73,7 +73,7 @@ function _formatValueString(formatter, form) {
         return _parseStringPlus(formatter, form);
     } else if (formatter.startsWith(FormatterOption.GET)) { // 只要 & 开头的为取值
         const val = _parseStringUnpack(formatter, form); // 解包
-        return val !== undefined && helper.get(form, val.substring(1));
+        return val !== undefined ? helper.get(form, val.substring(1)) : val;
     }
     return formatter;
 }

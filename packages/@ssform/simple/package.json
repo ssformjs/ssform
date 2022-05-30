@@ -1,6 +1,6 @@
 {
   "name": "@ssform/simple",
-  "version": "0.0.0-alpha.9",
+  "version": "0.0.0-alpha.12",
   "description": "ssform simple",
   "keywords": [
     "ssform"
@@ -48,7 +48,7 @@
     "typescript": "^3.9.7"
   },
   "dependencies": {
-    "@ssform/core": "0.0.0-alpha.8",
+    "@ssform/core": "0.0.0-alpha.10",
     "lodash": "^4.17.20"
   }
 }

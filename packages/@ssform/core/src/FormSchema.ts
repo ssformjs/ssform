@@ -66,9 +66,10 @@ class Builder {
 
 export default class FormSchema {
 
-    ctx: IContext
-    schema: ISchema | object // root layout
+    ctx: IContext;
+    schema: ISchema | object; // root schema
     builder: Builder | undefined;
+    rootLayout: Layout | undefined; // root layout
 
     constructor(schema: ISchema | object, data?: object | null, hook?: IHook) {
         // 校验 schema
@@ -83,12 +84,13 @@ export default class FormSchema {
     }
 
     create() {
-        const layout = new Layout(this.ctx, {
+        this.rootLayout = new Layout(this.ctx, {
             parent: null,
             schema: this.schema,
             level: 0,
-        }).created();
-        this.builder = new Builder(this, layout);
+        });
+        this.rootLayout.created();
+        this.builder = new Builder(this, this.rootLayout);
         return this.builder;
     }
 

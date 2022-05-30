@@ -118,7 +118,6 @@ export default class Layout extends BaseEventHandler implements ILifecycle {
     set data(value: any) {
         if (this.parent) {
             this.parent.data[this.key] = value;
-            this.parent._clearvalueCache();
         } else { // not has parent
             this.ctx.data = value;
         }
@@ -187,6 +186,9 @@ export default class Layout extends BaseEventHandler implements ILifecycle {
 
     private _clearvalueCache() {
         this._valueCache = undefined;
+        if (this.parent) {
+            this.parent._clearvalueCache();
+        }
     }
 
     private initLayouts() {
@@ -403,7 +405,6 @@ export default class Layout extends BaseEventHandler implements ILifecycle {
                 const key = this.schema.key;
                 delete this.parent.data[key];
             }
-            this.parent._clearvalueCache();
         }
         this._clearvalueCache();
 
